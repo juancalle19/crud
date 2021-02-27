@@ -1,9 +1,11 @@
 import React, {useState} from 'react'
 import { isEmpty } from 'lodash'
+import shortid from 'shortid'
 
 function App() {
 
   const [task, setTask] = useState("")
+  const [tasks , setTasks] = useState([])
 
   const addTask = (e) => {
     e.preventDefault()
@@ -11,8 +13,14 @@ function App() {
       console.log("Empty")
       return
     }
+    
+    const newTask = {
+      id: shortid.generate(),
+      name : task
+    }
 
-    console.log("ok")
+    setTasks([...tasks,newTask])
+    setTask("")
     return
   }
 
@@ -27,11 +35,16 @@ function App() {
           <h4 className = "text-center">Listas de tareas</h4>
           <hr/>
           <ul className = "list-group">
-            <li className = "list-group-item">
-              <span className = "lead">Tarea1</span>
-              <button className = "btn btn-danger btn-sm float-right">Eliminar</button>
-              <button className = "btn btn-warning btn-sm float-right mx-2">Editar</button>
-            </li>
+            {
+              tasks.map((tasks)=>(
+                <li className = "list-group-item" key ={tasks.id}>
+                  <span className = "lead">{tasks.name}</span>
+                  <button className = "btn btn-danger btn-sm float-right">Eliminar</button>
+                  <button className = "btn btn-warning btn-sm float-right mx-2">Editar</button>
+                </li>
+              ))
+              
+            }
           </ul>
         </div>
         <div className = "col-4">
