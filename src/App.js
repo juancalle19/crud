@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import { isEmpty, size } from 'lodash'
-import shortid from 'shortid'
+import shortid, { isValid } from 'shortid'
 
 function App() {
 
@@ -8,11 +8,24 @@ function App() {
   const [tasks , setTasks] = useState([])
   const [editMode, seteditMode] = useState(false)
   const [id, setId] = useState("")
+  const [error, setError] = useState(null)
+
+  const validForm = () => {
+    let isValid = true
+    setError(null)
+
+    if(isEmpty(task)){
+      setError("Ingresar una tarea")
+      isValid = false
+      
+    }
+
+    return isValid
+  }
 
   const addTask = (e) => {
     e.preventDefault()
-    if(isEmpty(task)){
-      console.log("Empty")
+    if(!validForm()){
       return
     }
     
@@ -42,8 +55,7 @@ function App() {
 
   const saveTask = (e) => {
     e.preventDefault()
-    if(isEmpty(task)){
-      console.log("Empty")
+    if(!validForm()){
       return
     }
     
@@ -67,7 +79,7 @@ function App() {
           <hr/>
           {
             size(tasks) === 0 ? (
-              <h5 className = "text-center">No hay tareas</h5>
+              <li className = "list-group-item">No hay tareas</li>
             ) : (
 
               <ul className = "list-group">
@@ -92,6 +104,9 @@ function App() {
           <h4 className = "text-center">{ editMode ? "Modificar Tarea" : "Agregar Tarea"}</h4>
           <hr/>
           <form onSubmit = {editMode ? saveTask : addTask}>
+            {
+              error && <span className ="text-danger">{error}</span>
+            }
             <input className = "form-control mb-2"
             type= "text"
             placeholder = "Ingrese tarea"
